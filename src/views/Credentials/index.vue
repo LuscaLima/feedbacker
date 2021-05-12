@@ -22,9 +22,9 @@
 
       <ContentLoader
         v-if="store.Global.isLoading || state.isLoading"
-        class="rounded"
+        class="rounded mt-2"
         width="600px"
-        height="35px"
+        height="48px"
       />
 
       <div
@@ -45,6 +45,7 @@
             :color="brandColors.graydark"
             size="24"
             class="cursor-pointer ml-3"
+            @click.stop="handleGenerateApiKey"
           />
         </div>
       </div>
@@ -56,9 +57,9 @@
 
       <ContentLoader
         v-if="store.Global.isLoading || state.isLoading"
-        class="rounded"
+        class="rounded mt-2"
         width="600px"
-        height="35px"
+        height="48px"
       />
 
       <div
@@ -88,6 +89,12 @@ import useStore from '../../hooks/useStore'
 // Palette
 import palette from '../../../palette'
 
+// Services
+import services from '../../services'
+
+// Store
+import { setApiKey } from '../../store/user'
+
 export default {
   name: 'Credentials',
 
@@ -101,13 +108,33 @@ export default {
     const store = useStore()
 
     const state = reactive({
-      isLoading: false
+      isLoading: false,
+      hasError: false
     })
+
+    function handleErrors(error) {
+      state.isLoading = false
+      state.hasError = !!error
+    }
+
+    async function handleGenerateApiKey() {
+      try {
+        state.isLoading = true
+
+        const { data } = await services.users.generateApiKey()
+        setApiKey(data.apiKey)
+
+        state.isLoading = false
+      } catch (error) {
+        handleErrors(error)
+      }
+    }
 
     return {
       state,
       store,
-      brandColors: palette.brand
+      brandColors: palette.brand,
+      handleGenerateApiKey
     }
   }
 }
