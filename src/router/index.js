@@ -21,7 +21,10 @@ const routes = [
   {
     path: '/credentials',
     name: 'Credentials',
-    component: Credentials
+    component: Credentials,
+    meta: {
+      hasAuth: true
+    }
   },
   {
     path: '/:pathMatch(.*)*',

@@ -38,6 +38,7 @@ export default {
             router.push({ name: 'Home' })
           } else {
             const { data } = await services.users.getMe()
+
             setCurrentUser(data)
           }
         }

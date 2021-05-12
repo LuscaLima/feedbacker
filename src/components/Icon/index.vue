@@ -4,12 +4,14 @@
 
 <script>
 // Components
+import Copy from './Copy'
 import Loading from './Loading'
 
 export default {
   name: 'Icon',
 
   components: {
+    Copy,
     Loading
   },
 
