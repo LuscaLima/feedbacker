@@ -31,13 +31,15 @@
         v-else
         class="flex py-3 px-5 mt-2 rounded justify-between items-center bg-brand-gray font-regular"
       >
-        <span>{{ store.User.currentUser.apiKey }}</span>
-        <div class="flex">
+        <span v-if="state.hasError">Erro ao carregar a API Key</span>
+        <span v-else>{{ store.User.currentUser.apiKey }}</span>
+        <div class="flex" v-if="!state.hasError">
           <Icon
             name="Copy"
             :color="brandColors.graydark"
             size="24"
             class="cursor-pointer"
+            @click.stop="handleCopy"
           />
 
           <Icon
@@ -66,7 +68,8 @@
         v-else
         class="flex py-3 px-5 mt-2 rounded items-center bg-brand-gray font-medium"
       >
-        <pre>
+        <span v-if="state.hasError">Erro ao carregar o script</span>
+        <pre v-else>
 &lt;script src="https://luscalima-feedbacker-widget.netlify.app?api_key={{
             store.User.currentUser.apiKey
           }}"&gt;&lt;/script&gt;</pre
@@ -83,7 +86,7 @@ import Icon from '../../components/Icon'
 import ContentLoader from '../../components/ContentLoader'
 
 // Hooks
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue'
 import useStore from '../../hooks/useStore'
 
 // Palette
@@ -112,6 +115,15 @@ export default {
       hasError: false
     })
 
+    watch(
+      () => store.User.currentUser,
+      () => {
+        if (!store.Global.isLoading && !store.User.currentUser.apiKey) {
+          handleErrors(true)
+        }
+      }
+    )
+
     function handleErrors(error) {
       state.isLoading = false
       state.hasError = !!error
@@ -130,11 +142,20 @@ export default {
       }
     }
 
+    async function handleCopy() {
+      try {
+        await navigator.clipboard.writeText(store.User.currentUser.apiKey)
+      } catch (error) {
+        handleErrors(error)
+      }
+    }
+
     return {
       state,
       store,
       brandColors: palette.brand,
-      handleGenerateApiKey
+      handleGenerateApiKey,
+      handleCopy
     }
   }
 }
