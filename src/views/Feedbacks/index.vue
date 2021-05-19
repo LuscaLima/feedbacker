@@ -21,7 +21,7 @@
             />
           </template>
           <template #fallback>
-            loading...
+            <FiltersLoading class="mt-8" />
           </template>
         </suspense>
       </div>
@@ -36,13 +36,15 @@
 // Components
 import TheHeaderLogged from '../../components/TheHeaderLogged'
 import Filters from './Filters'
+import FiltersLoading from './FiltersLoading'
 
 export default {
   name: 'Feedbacks',
 
   components: {
     TheHeaderLogged,
-    Filters
+    Filters,
+    FiltersLoading
   }
 }
 </script>
