@@ -6,13 +6,15 @@
 // Components
 import Copy from './Copy'
 import Loading from './Loading'
+import ChevronDown from './ChevronDown'
 
 export default {
   name: 'Icon',
 
   components: {
     Copy,
-    Loading
+    Loading,
+    ChevronDown
   },
 
   props: {
